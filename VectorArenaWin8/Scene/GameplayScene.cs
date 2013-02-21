@@ -16,6 +16,7 @@ namespace VectorArenaWin8
     {
         public ShipManager ShipManager;
         public BulletManager BulletManager;
+        public GameStateManager GameStateManager;
 
         const int worldWidth = 10000;
         const int worldHeight = 10000;
@@ -36,6 +37,7 @@ namespace VectorArenaWin8
             grid = new Grid(worldWidth, worldHeight);
             ShipManager = new ShipManager();
             BulletManager = new BulletManager();
+            GameStateManager = new GameStateManager();
 
             AddActor(ShipManager);
             AddActor(BulletManager);
@@ -44,7 +46,7 @@ namespace VectorArenaWin8
 
             connection = new HubConnection("http://localhost:2697");
             proxy = connection.CreateHubProxy("gameHub");
-            proxy.On("sync", data => Sync(data));
+            proxy.On("Sync", data => Sync(data));
             connection.Start().ContinueWith(startTask =>
             {
                 proxy.Invoke<int>("AddPlayer").ContinueWith(invokeTask =>
@@ -58,7 +60,9 @@ namespace VectorArenaWin8
 
         void Sync(dynamic data)
         {
-            
+            GameState gameState = GameStateManager.Decompress(data);
+
+            ShipManager.SyncShips(gameState.Ships);
         }
 
         public override void Update(GameTime gameTime)

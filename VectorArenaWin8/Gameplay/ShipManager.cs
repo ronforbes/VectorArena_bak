@@ -49,7 +49,13 @@ namespace VectorArenaWin8.Gameplay
 
         public void SyncShips(List<Ship> ships)
         {
-
+            foreach (Ship ship in ships)
+            {
+                this.ships[ship.Id].Position = ship.Position;
+                this.ships[ship.Id].Velocity = ship.Velocity;
+                this.ships[ship.Id].Acceleration = ship.Acceleration;
+                this.ships[ship.Id].Rotation = ship.Rotation;
+            }
         }
 
         public override void Update(GameTime gameTime)
