@@ -26,7 +26,6 @@ namespace VectorArenaWin8
         protected override void Initialize()
         {
             scene = new GameplayScene(GraphicsDevice);
-            scene.Initialize();
 
             base.Initialize();
         }

@@ -9,53 +9,26 @@ namespace VectorArenaWin8
 {
     class BulletManager : Actor
     {
-        public List<Bullet> Bullets;
+        Dictionary<int, Bullet> bullets;
 
-        public BulletManager(int bulletCapacity)
+        public BulletManager()
             : base()
         {
-            Bullets = new List<Bullet>(bulletCapacity);
+            bullets = new Dictionary<int, Bullet>();
         }
 
-        public void CreateBullets()
+        public void AddBullet(Bullet bullet)
         {
-            for (int i = 0; i < Bullets.Capacity; i++)
+            if (!bullets.ContainsKey(bullet.Id))
             {
-                Bullet b = new Bullet();
-                Bullets.Add(b);
-                AddChild(b);
+                bullets.Add(bullet.Id, new Bullet(bullet));
+                AddChild(bullets[bullet.Id]);
             }
         }
 
-        public void SpawnBullet(Vector2 position, Vector2 velocity)
+        public void SyncBullets(List<Bullet> bullets)
         {
-            for (int i = 0; i < Bullets.Capacity; i++)
-            {
-                if (!Bullets[i].Alive)
-                {
-                    Bullets[i].Spawn(position, velocity);
-                    return;
-                }
-            }
-        }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Draw(Camera camera)
-        {
-            LineBatch.Begin(Matrix.Identity, camera);
-
-            foreach (Bullet b in Bullets)
-            {
-                b.Draw(LineBatch);
-            }
-
-            LineBatch.End();
-
-            base.Draw(camera);
         }
     }
 }

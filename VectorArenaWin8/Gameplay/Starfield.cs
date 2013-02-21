@@ -17,14 +17,14 @@ namespace VectorArenaWin8
         const float starRadius = 5.0f;
         const int starCount = 100000;
 
-        public Starfield(int size)
+        public Starfield(int width, int height, int depth)
         {
             random = new Random();
 
             points = new Vector3[starCount];
             brightnesses = new float[starCount];
 
-            BoundingBox bounds = new BoundingBox(new Vector3(-1 * size, -1 * size, -1 * size), new Vector3(size, size, size));
+            BoundingBox bounds = new BoundingBox(new Vector3(-1 * width / 2, -1 * height / 2, -1 * depth / 2), new Vector3(width / 2, height / 2, depth / 2));
 
             for (int s = 0; s < points.Length; s++)
             {

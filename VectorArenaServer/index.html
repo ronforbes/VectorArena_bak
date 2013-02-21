@@ -15,15 +15,19 @@
     <script src="/signalr/hubs" type="text/javascript"></script>
     <script>
         $(function () {
-            var connection = $.connection.server;
+            var connection = $.connection.gameHub;
 
-            connection.client.addMessage = function (message) {
+            connection.client.Log = function (message) {
+                $('#messages').append('<li>' + message + '</li>');
+            };
+
+            connection.client.Sync = function (message) {
                 $('#messages').append('<li>' + message + '</li>');
             };
 
             $.connection.hub.start().done(function () {
                 $('#submit').click(function () {
-                    connection.server.send($('#message').val());
+                    connection.server.Send($('#message').val());
                 });
             });
         });

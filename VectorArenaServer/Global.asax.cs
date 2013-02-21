@@ -10,10 +10,12 @@ namespace VectorArenaServer
 {
     public class Global : System.Web.HttpApplication
     {
+        public Game Game;
 
         protected void Application_Start(object sender, EventArgs e)
         {
             RouteTable.Routes.MapHubs();
+            Game = new Game();
         }
 
         protected void Session_Start(object sender, EventArgs e)

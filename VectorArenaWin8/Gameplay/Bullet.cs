@@ -9,6 +9,8 @@ namespace VectorArenaWin8
 {
     class Bullet : Actor
     {
+        public int Id;
+
         const float speed = 20.0f;
         const float lifeSpan = 100.0f;
         const float decay = 1.0f;
@@ -17,6 +19,13 @@ namespace VectorArenaWin8
 
         float life;
         Color color = Color.White;
+
+        public Bullet(Bullet bullet)
+        {
+            this.Position = bullet.Position;
+            this.Velocity = bullet.Velocity;
+            this.Acceleration = bullet.Acceleration;
+        }
 
         public void Spawn(Vector2 position, Vector2 velocity)
         {
@@ -45,11 +54,18 @@ namespace VectorArenaWin8
             }
         }
 
-        public void Draw(LineBatch lineBatch)
+        public override void Draw(Camera camera)
         {
-            if (Alive)
+            if (LineBatch == null || PointBatch == null)
             {
-                lineBatch.Draw(Position, Position - Velocity * length, width, color);
+                LineBatch = Scene.LineBatch;
+                PointBatch = Scene.PointBatch;
+            }
+            else
+            {
+                LineBatch.Begin(Matrix.Identity, camera);
+                LineBatch.Draw(Position, Position - Velocity * length, width, color);
+                LineBatch.End();
             }
         }
     }

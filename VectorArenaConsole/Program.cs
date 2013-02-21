@@ -15,10 +15,12 @@ namespace VectorArenaConsole
             HubConnection hubConnection = new HubConnection("http://localhost:2697");
 
             // Create a proxy to the server
-            var server = hubConnection.CreateHubProxy("server");
+            IHubProxy proxy = hubConnection.CreateHubProxy("gameHub");
 
             // Print the message when it comes in
-            server.On("addMessage", message => Console.WriteLine(message));
+            proxy.On("Log", data => Console.WriteLine(data));
+
+            proxy.On("Sync", data => Console.WriteLine(data));
 
             // Start the connection
             hubConnection.Start().Wait();
@@ -27,7 +29,7 @@ namespace VectorArenaConsole
             while ((line = Console.ReadLine()) != null)
             {
                 // Send a message to the server
-                server.Invoke("Send", line).Wait();
+                proxy.Invoke("Send", line).Wait();
             }
         }
     }

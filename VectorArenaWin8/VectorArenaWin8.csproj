@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gameplay\Grid.cs" />
+    <Compile Include="Gameplay\ShipManager.cs" />
     <Compile Include="Graphics\Bloom.cs" />
     <Compile Include="Graphics\Postprocess.cs" />
     <Compile Include="Scene\Actor.cs" />

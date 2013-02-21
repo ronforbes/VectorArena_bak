@@ -11,7 +11,7 @@ namespace VectorArenaWin8.Gameplay
     {
         const int primaryLineInterval = 200;
         const int primaryLineWidth = 10;
-        Color primaryLineColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+        Color primaryLineColor = new Color(0.15f, 0.15f, 0.15f, 0.25f);
         const int secondaryLineInterval = 100;
         const int secondaryLineWidth = 5;
         Color secondaryLineColor = new Color(0.1f, 0.1f, 0.1f, 0.5f);
@@ -25,14 +25,14 @@ namespace VectorArenaWin8.Gameplay
         List<Color> colors;
         BoundingBox bounds;
 
-        public Grid(int size)
+        public Grid(int width, int height)
             : base()
         {
             startPoints = new List<Vector3>();
             endPoints = new List<Vector3>();
             widths = new List<int>();
             colors = new List<Color>();
-            bounds = new BoundingBox(new Vector3(-1 * size, -1 * size, 0.0f), new Vector3(size, size, 0.0f));
+            bounds = new BoundingBox(new Vector3(-1 * width / 2, -1 * height / 2, 0.0f), new Vector3(width / 2, height / 2, 0.0f));
 
             for (int x = (int)bounds.Min.X; x <= bounds.Max.X; x += tertiaryLineInterval)
             {

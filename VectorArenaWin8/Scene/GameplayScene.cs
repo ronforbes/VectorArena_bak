@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.AspNet.SignalR.Client.Hubs;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -13,65 +14,72 @@ namespace VectorArenaWin8
 {
     class GameplayScene : Scene
     {
+        public ShipManager ShipManager;
         public BulletManager BulletManager;
 
-        const int worldSize = 10000;
+        const int worldWidth = 10000;
+        const int worldHeight = 10000;
+        const int worldDepth = 10000;
 
-        Ship ship;
         Starfield starfield;
         Grid grid;
+        HubConnection connection;
+        IHubProxy proxy;
+        int frameRate = 0;
+        int frameCounter = 0;
+        TimeSpan elapsedTime = TimeSpan.Zero;
 
         public GameplayScene(GraphicsDevice graphicsDevice)
             : base(graphicsDevice)
         {
-            BulletManager = new BulletManager(100);
-            ship = new Ship();
-            starfield = new Starfield(worldSize);
-            grid = new Grid(worldSize);
-        }
+            starfield = new Starfield(worldWidth, worldHeight, worldDepth);
+            grid = new Grid(worldWidth, worldHeight);
+            ShipManager = new ShipManager();
+            BulletManager = new BulletManager();
 
-        public void Initialize()
-        {
+            AddActor(ShipManager);
+            AddActor(BulletManager);
             AddActor(starfield);
             AddActor(grid);
-            AddActor(ship);
-            AddActor(BulletManager);
 
-            BulletManager.CreateBullets();
-
-            Camera.Position = new Vector3(0.0f, 0.0f, 500.0f);
-            Camera.TargetActor = ship;
+            connection = new HubConnection("http://localhost:2697");
+            proxy = connection.CreateHubProxy("gameHub");
+            proxy.On("sync", data => Sync(data));
+            connection.Start().ContinueWith(startTask =>
+            {
+                proxy.Invoke<int>("AddPlayer").ContinueWith(invokeTask =>
+                {
+                    ShipManager.InitializePlayerShip(invokeTask.Result);
+                    Camera.TargetActor = ShipManager.PlayerShip;
+                    Camera.Position = new Vector3(ShipManager.PlayerShip.Position.X, ShipManager.PlayerShip.Position.Y, 500.0f);
+                });
+            });
         }
 
-        public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        void Sync(dynamic data)
         {
-            KeyboardState keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Left))
+            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            elapsedTime += gameTime.ElapsedGameTime;
+
+            if (elapsedTime > TimeSpan.FromSeconds(1))
             {
-                ship.Turn(1);
-            }
-            if (keyboard.IsKeyDown(Keys.Right))
-            {
-                ship.Turn(-1);
-            }
-            if (keyboard.IsKeyDown(Keys.Up))
-            {
-                ship.Thrust(1);
-            }
-            else if (keyboard.IsKeyDown(Keys.Down))
-            {
-                ship.Thrust(-1);
-            }
-            else
-            {
-                ship.Thrust(0);
-            }
-            if (keyboard.IsKeyDown(Keys.Space))
-            {
-                ship.Fire();
+                elapsedTime -= TimeSpan.FromSeconds(1);
+                frameRate = frameCounter;
+                frameCounter = 0;
             }
 
             base.Update(gameTime);
+        }
+
+        public override void Draw()
+        {
+            frameCounter++;
+
+            base.Draw();
         }
     }
 }

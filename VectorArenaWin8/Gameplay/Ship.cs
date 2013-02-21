@@ -10,9 +10,12 @@ namespace VectorArenaWin8
 {
     class Ship : Actor
     {
-        const float maxSpeed = 10.0f;
+        public int Id;
+
+        const float thrustAcceleration = 500.0f;
+        const float maxSpeed = 2000.0f;
+        const float dragCoefficient = 0.95f;
         const float turnSpeed = 3.0f;
-        const float thrustAcceleration = 1.0f;
         const float fireSpeed = 1.0f;
         const float fireDelay = 5.0f;
         const float lineWidth = 5.0f;
@@ -23,9 +26,16 @@ namespace VectorArenaWin8
         Color color = Color.White;
         Color lightColor = new Color(0.25f, 0.25f, 0.25f, 1.0f);
 
-        public Ship() : base()
+        public Ship(int id) : base()
         {
+            Id = id;
             Radius = 15.0f;
+
+            vertices = new List<Vector3>();
+            vertices.Add(new Vector3(15.0f, 0.0f, 0.0f));
+            vertices.Add(new Vector3(-15.0f, -15.0f, 0.0f));
+            vertices.Add(new Vector3(-10.0f, 0.0f, 0.0f));
+            vertices.Add(new Vector3(-15.0f, 15.0f, 0.0f));
         }
 
         public void Turn(int direction)
@@ -44,24 +54,28 @@ namespace VectorArenaWin8
             {
                 GameplayScene scene = Scene as GameplayScene;
                 Vector2 velocity = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
-                scene.BulletManager.SpawnBullet(new Vector2(Position.X + velocity.X * Radius * 2, Position.Y + velocity.Y * Radius * 2), velocity);
+                //scene.BulletManager.SpawnBullet(new Vector2(Position.X + velocity.X * Radius * 2, Position.Y + velocity.Y * Radius * 2), velocity);
                 fireTimer = 0.0f;
             }
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Update the ship's velocity and position
-            Velocity += Acceleration;
+            // Update the ship's velocity based on acceleration
+            Velocity += Acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
+            // Cap max speed
             if (Velocity.Length() > maxSpeed)
             {
                 Velocity.Normalize();
                 Velocity *= maxSpeed;
             }
 
-            Velocity *= 0.95f;
+            // Apply drag to velocity
+            Velocity *= dragCoefficient;
 
-            Position += Velocity;
+            // Update the ship's position based on velocity
+            Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if(fireTimer < fireDelay)
                 fireTimer += fireSpeed;
@@ -73,18 +87,26 @@ namespace VectorArenaWin8
             Matrix rotation = Matrix.CreateRotationZ(Rotation);
             Matrix translation = Matrix.CreateTranslation(Position);
 
-            LineBatch.Begin(rotation * translation, camera);
+            if (LineBatch == null || PointBatch == null)
+            {
+                LineBatch = Scene.LineBatch;
+                PointBatch = Scene.PointBatch;
+            }
+            else
+            {
+                LineBatch.Begin(rotation * translation, camera);
 
-            LineBatch.Draw(new Vector3(-15.0f, 15.0f, 0.0f), new Vector3(15.0f, 15.0f, 0.0f), lineWidth, color);
-            LineBatch.Draw(new Vector3(15.0f, 15.0f, 0.0f), new Vector3(15.0f, -15.0f, 0.0f), lineWidth, color);
-            LineBatch.Draw(new Vector3(15.0f, -15.0f, 0.0f), new Vector3(-15.0f, -15.0f, 0.0f), lineWidth, color);
-            LineBatch.Draw(new Vector3(-15.0f, -15.0f, 0.0f), new Vector3(-15.0f, 15.0f, 0.0f), lineWidth, color);
+                for (int v = 0; v < vertices.Count; v++)
+                {
+                    LineBatch.Draw(vertices[v], vertices[(v + 1) % vertices.Count], lineWidth, color);
+                }
 
-            LineBatch.End();
+                LineBatch.End();
 
-            PointBatch.Begin(translation, camera);
-            PointBatch.Draw(Vector3.Zero, lightRadius, lightColor);
-            PointBatch.End();
+                PointBatch.Begin(translation, camera);
+                PointBatch.Draw(Vector3.Zero, lightRadius, lightColor);
+                PointBatch.End();
+            }
         }
     }
 }
