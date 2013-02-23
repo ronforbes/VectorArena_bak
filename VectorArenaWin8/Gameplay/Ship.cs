@@ -11,14 +11,15 @@ namespace VectorArenaWin8
     class Ship : Actor
     {
         public int Id;
-        public Dictionary<Direction, bool> Moving;
+        public Dictionary<Action, bool> Actions;
 
-        public enum Direction
+        public enum Action
         {
-            Left,
-            Right,
-            Forward,
-            Backward
+            TurnLeft,
+            TurnRight,
+            ThrustForward,
+            ThrustBackward,
+            Fire
         }
 
         const float thrustAcceleration = 500.0f;
@@ -39,11 +40,12 @@ namespace VectorArenaWin8
         {
             Id = id;
             
-            Moving = new Dictionary<Direction, bool>();
-            Moving.Add(Direction.Left, false);
-            Moving.Add(Direction.Right, false);
-            Moving.Add(Direction.Forward, false);
-            Moving.Add(Direction.Backward, false);
+            Actions = new Dictionary<Action, bool>();
+            Actions.Add(Action.TurnLeft, false);
+            Actions.Add(Action.TurnRight, false);
+            Actions.Add(Action.ThrustForward, false);
+            Actions.Add(Action.ThrustBackward, false);
+            Actions.Add(Action.Fire, false);
 
             Radius = 15.0f;
 
@@ -87,19 +89,19 @@ namespace VectorArenaWin8
             Acceleration = Vector3.Zero;
 
             // Apply rotation / acceleration based on movement
-            if (Moving[Direction.Left])
+            if (Actions[Action.TurnLeft])
             {
                 Rotation += MathHelper.ToRadians(turnSpeed);
             }
-            if (Moving[Direction.Right])
+            if (Actions[Action.TurnRight])
             {
                 Rotation -= MathHelper.ToRadians(turnSpeed);
             }
-            if(Moving[Direction.Forward])
+            if(Actions[Action.ThrustForward])
             {
                 Acceleration += new Vector3((float)Math.Cos(Rotation), (float)Math.Sin(Rotation), 0.0f) * thrustAcceleration;
             }
-            if(Moving[Direction.Backward])
+            if(Actions[Action.ThrustBackward])
             {
                 Acceleration -= new Vector3((float)Math.Cos(Rotation), (float)Math.Sin(Rotation), 0.0f) * thrustAcceleration;
             }

@@ -18,7 +18,7 @@ namespace VectorArenaWin8.Gameplay
 
         Dictionary<int, Ship> ships;
         Ship playerShip;
-        Dictionary<Keys, Ship.Direction> keyMappings;
+        Dictionary<Keys, Ship.Action> keyMappings;
         KeyboardState previousKeyboardState;
         IHubProxy hubProxy;
 
@@ -26,11 +26,12 @@ namespace VectorArenaWin8.Gameplay
         {
             ships = new Dictionary<int, Ship>();
             
-            keyMappings = new Dictionary<Keys, Ship.Direction>();
-            keyMappings.Add(Keys.Left, Ship.Direction.Left);
-            keyMappings.Add(Keys.Right, Ship.Direction.Right);
-            keyMappings.Add(Keys.Up, Ship.Direction.Forward);
-            keyMappings.Add(Keys.Down, Ship.Direction.Backward);
+            keyMappings = new Dictionary<Keys, Ship.Action>();
+            keyMappings.Add(Keys.Left, Ship.Action.TurnLeft);
+            keyMappings.Add(Keys.Right, Ship.Action.TurnRight);
+            keyMappings.Add(Keys.Up, Ship.Action.ThrustForward);
+            keyMappings.Add(Keys.Down, Ship.Action.ThrustBackward);
+            keyMappings.Add(Keys.Space, Ship.Action.Fire);
 
             previousKeyboardState = Keyboard.GetState();
         }
@@ -82,18 +83,18 @@ namespace VectorArenaWin8.Gameplay
             KeyboardState keyboardState = Keyboard.GetState();
 
             // Handle key presses and releases
-            foreach (KeyValuePair<Keys, Ship.Direction> keyMapping in keyMappings)
+            foreach (KeyValuePair<Keys, Ship.Action> keyMapping in keyMappings)
             {
                 if (keyboardState.IsKeyDown(keyMapping.Key) && previousKeyboardState.IsKeyUp(keyMapping.Key))
                 {
-                    hubProxy.Invoke("StartMoving", keyMapping.Value.ToString());
-                    playerShip.Moving[keyMapping.Value] = true;
+                    hubProxy.Invoke("StartAction", keyMapping.Value.ToString());
+                    playerShip.Actions[keyMapping.Value] = true;
                 }
 
                 if (keyboardState.IsKeyUp(keyMapping.Key) && previousKeyboardState.IsKeyDown(keyMapping.Key))
                 {
-                    hubProxy.Invoke("StopMoving", keyMapping.Value.ToString());
-                    playerShip.Moving[keyMapping.Value] = false;
+                    hubProxy.Invoke("StopAction", keyMapping.Value.ToString());
+                    playerShip.Actions[keyMapping.Value] = false;
                 }
             }
             

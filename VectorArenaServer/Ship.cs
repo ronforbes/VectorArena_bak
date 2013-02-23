@@ -14,15 +14,16 @@ namespace VectorArenaServer
         public Vector2 Velocity;
         public Vector2 Acceleration;
         public float Rotation;
-        public ConcurrentDictionary<Direction, bool> Moving;
+        public ConcurrentDictionary<Action, bool> Actions;
         public Player Player;
 
-        public enum Direction
+        public enum Action
         {
-            Left,
-            Right,
-            Forward,
-            Backward
+            TurnLeft,
+            TurnRight,
+            ThrustForward,
+            ThrustBackward,
+            Fire
         }
 
         const float thrustAcceleration = 500.0f;
@@ -46,11 +47,12 @@ namespace VectorArenaServer
             Acceleration = Vector2.Zero;
             Rotation = 0.0f;
             
-            Moving = new ConcurrentDictionary<Direction, bool>();
-            Moving.TryAdd(Direction.Left, false);
-            Moving.TryAdd(Direction.Right, false);
-            Moving.TryAdd(Direction.Forward, false);
-            Moving.TryAdd(Direction.Backward, false);
+            Actions = new ConcurrentDictionary<Action, bool>();
+            Actions.TryAdd(Action.TurnLeft, false);
+            Actions.TryAdd(Action.TurnRight, false);
+            Actions.TryAdd(Action.ThrustForward, false);
+            Actions.TryAdd(Action.ThrustBackward, false);
+            Actions.TryAdd(Action.Fire, false);
         }
 
         public void Update(TimeSpan elapsedTime)
@@ -75,19 +77,19 @@ namespace VectorArenaServer
             Acceleration = Vector2.Zero;
 
             // Apply rotation / acceleration based on movement
-            if (Moving[Direction.Left])
+            if (Actions[Action.TurnLeft])
             {
                 Rotation += MathHelper.ToRadians(turnSpeed);
             }
-            if (Moving[Direction.Right])
+            if (Actions[Action.TurnRight])
             {
                 Rotation -= MathHelper.ToRadians(turnSpeed);
             }
-            if (Moving[Direction.Forward])
+            if (Actions[Action.ThrustForward])
             {
                 Acceleration += new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * thrustAcceleration;
             }
-            if (Moving[Direction.Backward])
+            if (Actions[Action.ThrustBackward])
             {
                 Acceleration -= new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation)) * thrustAcceleration;
             }

@@ -1,39 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-
-  <Identity Name="890fecf0-d808-4228-ba79-653457e6ecf6"
-            Publisher="CN=Ron"
-            Version="1.0.0.0" />
-
+  <Identity Name="890fecf0-d808-4228-ba79-653457e6ecf6" Publisher="CN=Ron" Version="1.0.0.0" />
   <Properties>
     <DisplayName>VectorArenaWin8</DisplayName>
     <PublisherDisplayName>Ron</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.2.1</OSMinVersion>
     <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="VectorArenaWin8.App">
-        <VisualElements
-            DisplayName="VectorArenaWin8"
-            Logo="Assets\Logo.png"
-            SmallLogo="Assets\SmallLogo.png"
-            Description="VectorArenaWin8"
-            ForegroundText="light"
-            BackgroundColor="#464646">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Assets\SplashScreen.png" />
-        </VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="VectorArenaWin8.App">
+      <VisualElements DisplayName="Vector Arena" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Vector Arena for Windows 8" ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
     </Application>
   </Applications>
   <Capabilities>

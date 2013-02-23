@@ -31,18 +31,18 @@ namespace VectorArenaServer
             return shipId;
         }
 
-        public void StartMoving(string direction)
+        public void StartAction(string action)
         {
             Ship ship = game.PlayerManager.Player(Context.ConnectionId).Ship;
-            Ship.Direction shipDirection = (Ship.Direction)Enum.Parse(typeof(Ship.Direction), direction);
-            ship.Moving[shipDirection] = true;
+            Ship.Action shipAction = (Ship.Action)Enum.Parse(typeof(Ship.Action), action);
+            ship.Actions[shipAction] = true;
         }
 
-        public void StopMoving(string direction)
+        public void StopAction(string action)
         {
             Ship ship = game.PlayerManager.Player(Context.ConnectionId).Ship;
-            Ship.Direction shipDirection = (Ship.Direction)Enum.Parse(typeof(Ship.Direction), direction);
-            ship.Moving[shipDirection] = false;
+            Ship.Action shipAction = (Ship.Action)Enum.Parse(typeof(Ship.Action), action);
+            ship.Actions[shipAction] = false;
         }
     }
 }
