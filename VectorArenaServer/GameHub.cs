@@ -17,6 +17,11 @@ namespace VectorArenaServer
             this.game = game;
         }
 
+        public void Log(string message)
+        {
+            Clients.All.Log(message);
+        }
+
         public int AddPlayer()
         {
             int shipId = game.AddPlayer(Context.ConnectionId);
@@ -26,9 +31,18 @@ namespace VectorArenaServer
             return shipId;
         }
 
-        public void Log(string message)
+        public void StartMoving(string direction)
         {
-            Clients.All.Log(message);
+            Ship ship = game.PlayerManager.Player(Context.ConnectionId).Ship;
+            Ship.Direction shipDirection = (Ship.Direction)Enum.Parse(typeof(Ship.Direction), direction);
+            ship.Moving[shipDirection] = true;
+        }
+
+        public void StopMoving(string direction)
+        {
+            Ship ship = game.PlayerManager.Player(Context.ConnectionId).Ship;
+            Ship.Direction shipDirection = (Ship.Direction)Enum.Parse(typeof(Ship.Direction), direction);
+            ship.Moving[shipDirection] = false;
         }
     }
 }

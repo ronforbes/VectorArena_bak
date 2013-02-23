@@ -20,6 +20,8 @@ namespace VectorArenaServer
             get { return GlobalHost.ConnectionManager.GetHubContext<GameHub>(); }
         }
 
+        public PlayerManager PlayerManager;
+
         const int worldWidth = 10000;
         const int worldHeight = 10000;
         const double updatesPerSecond = 60;
@@ -27,7 +29,7 @@ namespace VectorArenaServer
 
         readonly static Lazy<Game> instance = new Lazy<Game>(() => new Game());
 
-        PlayerManager playerManager;
+        
         ShipManager shipManager;
         //BulletManager bulletManager;
         GameStateManager gameStateManager;
@@ -39,7 +41,7 @@ namespace VectorArenaServer
 
         public Game()
         {
-            playerManager = new PlayerManager();
+            PlayerManager = new PlayerManager();
             shipManager = new ShipManager();
             //bulletManager = new BulletManager();
             gameStateManager = new GameStateManager();
@@ -60,7 +62,7 @@ namespace VectorArenaServer
             Ship ship = new Ship(new Vector2(random.Next(worldWidth) - worldWidth / 2, random.Next(worldHeight) - worldHeight / 2));
             Player player = new Player(connectionId, ship);
 
-            playerManager.Add(player);
+            PlayerManager.Add(player);
             shipManager.Add(ship);
 
             return ship.Id;
@@ -80,11 +82,11 @@ namespace VectorArenaServer
             TimeSpan elapsedTime = e.SignalTime - previousDrawTime;
             previousDrawTime = e.SignalTime;
 
-            ConcurrentDictionary<string, object[]> gameStates = gameStateManager.GameStates(playerManager.Players, shipManager.Ships);
+            ConcurrentDictionary<string, object[]> gameStates = gameStateManager.GameStates(PlayerManager.Players, shipManager.Ships);
 
             foreach (string connectionId in gameStates.Keys)
             {
-                playerManager.Player(connectionId).Sync(gameStates[connectionId], HubContext);
+                PlayerManager.Player(connectionId).Sync(gameStates[connectionId], HubContext);
             }
         }
     }

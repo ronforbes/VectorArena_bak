@@ -11,6 +11,15 @@ namespace VectorArenaWin8
     class Ship : Actor
     {
         public int Id;
+        public Dictionary<Direction, bool> Moving;
+
+        public enum Direction
+        {
+            Left,
+            Right,
+            Forward,
+            Backward
+        }
 
         const float thrustAcceleration = 500.0f;
         const float maxSpeed = 2000.0f;
@@ -29,6 +38,13 @@ namespace VectorArenaWin8
         public Ship(int id) : base()
         {
             Id = id;
+            
+            Moving = new Dictionary<Direction, bool>();
+            Moving.Add(Direction.Left, false);
+            Moving.Add(Direction.Right, false);
+            Moving.Add(Direction.Forward, false);
+            Moving.Add(Direction.Backward, false);
+
             Radius = 15.0f;
 
             vertices = new List<Vector3>();
@@ -36,16 +52,6 @@ namespace VectorArenaWin8
             vertices.Add(new Vector3(-15.0f, -15.0f, 0.0f));
             vertices.Add(new Vector3(-10.0f, 0.0f, 0.0f));
             vertices.Add(new Vector3(-15.0f, 15.0f, 0.0f));
-        }
-
-        public void Turn(int direction)
-        {
-            Rotation += MathHelper.ToRadians(turnSpeed) * direction;
-        }
-
-        public void Thrust(int direction)
-        {
-            Acceleration = new Vector3((float)Math.Cos(Rotation), (float)Math.Sin(Rotation), 0.0f) * thrustAcceleration * direction;
         }
 
         public void Fire()
@@ -76,6 +82,27 @@ namespace VectorArenaWin8
 
             // Update the ship's position based on velocity
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Reset acceleration
+            Acceleration = Vector3.Zero;
+
+            // Apply rotation / acceleration based on movement
+            if (Moving[Direction.Left])
+            {
+                Rotation += MathHelper.ToRadians(turnSpeed);
+            }
+            if (Moving[Direction.Right])
+            {
+                Rotation -= MathHelper.ToRadians(turnSpeed);
+            }
+            if(Moving[Direction.Forward])
+            {
+                Acceleration += new Vector3((float)Math.Cos(Rotation), (float)Math.Sin(Rotation), 0.0f) * thrustAcceleration;
+            }
+            if(Moving[Direction.Backward])
+            {
+                Acceleration -= new Vector3((float)Math.Cos(Rotation), (float)Math.Sin(Rotation), 0.0f) * thrustAcceleration;
+            }
 
             if(fireTimer < fireDelay)
                 fireTimer += fireSpeed;

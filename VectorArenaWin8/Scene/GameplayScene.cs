@@ -24,8 +24,8 @@ namespace VectorArenaWin8
 
         Starfield starfield;
         Grid grid;
-        HubConnection connection;
-        IHubProxy proxy;
+        HubConnection hubConnection;
+        IHubProxy hubProxy;
         int frameRate = 0;
         int frameCounter = 0;
         TimeSpan elapsedTime = TimeSpan.Zero;
@@ -44,14 +44,14 @@ namespace VectorArenaWin8
             AddActor(starfield);
             AddActor(grid);
 
-            connection = new HubConnection("http://localhost:2697");
-            proxy = connection.CreateHubProxy("gameHub");
-            proxy.On("Sync", data => Sync(data));
-            connection.Start().ContinueWith(startTask =>
+            hubConnection = new HubConnection("http://localhost:2697");
+            hubProxy = hubConnection.CreateHubProxy("gameHub");
+            hubProxy.On("Sync", data => Sync(data));
+            hubConnection.Start().ContinueWith(startTask =>
             {
-                proxy.Invoke<int>("AddPlayer").ContinueWith(invokeTask =>
+                hubProxy.Invoke<int>("AddPlayer").ContinueWith(invokeTask =>
                 {
-                    ShipManager.InitializePlayerShip(invokeTask.Result);
+                    ShipManager.InitializePlayerShip(invokeTask.Result, hubProxy);
                     Camera.TargetActor = ShipManager.PlayerShip;
                     Camera.Position = new Vector3(ShipManager.PlayerShip.Position.X, ShipManager.PlayerShip.Position.Y, 500.0f);
                 });

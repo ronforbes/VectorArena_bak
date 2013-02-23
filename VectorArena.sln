@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorArenaServer", "VectorArenaServer\VectorArenaServer.csproj", "{B301624A-DE06-47F7-952B-38431BF8481C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorArenaWin8", "VectorArenaWin8\VectorArenaWin8.csproj", "{AFFDEAAD-802C-4DEB-8C67-907343477A23}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B301624A-DE06-47F7-952B-38431BF8481C} = {B301624A-DE06-47F7-952B-38431BF8481C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorArenaConsole", "VectorArenaConsole\VectorArenaConsole.csproj", "{E659571D-5467-45BF-B500-FED5782D0B26}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B301624A-DE06-47F7-952B-38431BF8481C} = {B301624A-DE06-47F7-952B-38431BF8481C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

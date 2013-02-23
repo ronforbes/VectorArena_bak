@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.AspNet.SignalR.Client.Hubs;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,30 @@ namespace VectorArenaWin8.Gameplay
 
         Dictionary<int, Ship> ships;
         Ship playerShip;
+        Dictionary<Keys, Ship.Direction> keyMappings;
+        KeyboardState previousKeyboardState;
+        IHubProxy hubProxy;
 
         public ShipManager() : base()
         {
             ships = new Dictionary<int, Ship>();
+            
+            keyMappings = new Dictionary<Keys, Ship.Direction>();
+            keyMappings.Add(Keys.Left, Ship.Direction.Left);
+            keyMappings.Add(Keys.Right, Ship.Direction.Right);
+            keyMappings.Add(Keys.Up, Ship.Direction.Forward);
+            keyMappings.Add(Keys.Down, Ship.Direction.Backward);
+
+            previousKeyboardState = Keyboard.GetState();
         }
 
-        public void InitializePlayerShip(int id)
+        public void InitializePlayerShip(int id, IHubProxy hubProxy)
         {
             AddShip(id);
 
             playerShip = ships[id];
+
+            this.hubProxy = hubProxy;
         }
 
         public void AddShip(int id)
@@ -51,6 +65,11 @@ namespace VectorArenaWin8.Gameplay
         {
             foreach (Ship ship in ships)
             {
+                if (!this.ships.ContainsKey(ship.Id))
+                {
+                    AddShip(ship.Id);
+                }
+
                 this.ships[ship.Id].Position = ship.Position;
                 this.ships[ship.Id].Velocity = ship.Velocity;
                 this.ships[ship.Id].Acceleration = ship.Acceleration;
@@ -60,31 +79,25 @@ namespace VectorArenaWin8.Gameplay
 
         public override void Update(GameTime gameTime)
         {
-            KeyboardState keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Left))
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            // Handle key presses and releases
+            foreach (KeyValuePair<Keys, Ship.Direction> keyMapping in keyMappings)
             {
-                playerShip.Turn(1);
-            }
-            if (keyboard.IsKeyDown(Keys.Right))
-            {
-                playerShip.Turn(-1);
-            }
-            if (keyboard.IsKeyDown(Keys.Up))
-            {
-                playerShip.Thrust(1);
-            }
-            else if (keyboard.IsKeyDown(Keys.Down))
-            {
-                playerShip.Thrust(-1);
-            }
-            else
-            {
-                if (playerShip != null)
+                if (keyboardState.IsKeyDown(keyMapping.Key) && previousKeyboardState.IsKeyUp(keyMapping.Key))
                 {
-                    playerShip.Thrust(0);
+                    hubProxy.Invoke("StartMoving", keyMapping.Value.ToString());
+                    playerShip.Moving[keyMapping.Value] = true;
+                }
+
+                if (keyboardState.IsKeyUp(keyMapping.Key) && previousKeyboardState.IsKeyDown(keyMapping.Key))
+                {
+                    hubProxy.Invoke("StopMoving", keyMapping.Value.ToString());
+                    playerShip.Moving[keyMapping.Value] = false;
                 }
             }
-            if (keyboard.IsKeyDown(Keys.Space))
+            
+            if (keyboardState.IsKeyDown(Keys.Space))
             {
                 if (playerShip != null)
                 {
@@ -92,6 +105,7 @@ namespace VectorArenaWin8.Gameplay
                 }
             }
 
+            previousKeyboardState = keyboardState;
             base.Update(gameTime);
         }
     }

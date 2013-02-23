@@ -25,7 +25,6 @@ namespace VectorArenaServer
         public void Sync(object[] gameState, IHubContext hubContext)
         {
             hubContext.Clients.Client(ConnectionId).Sync(gameState);
-            hubContext.Clients.All.Log("Synced game state: ConnectionId=" + ConnectionId + ", gameState=" + gameState.ToString());
         }
     }
 }

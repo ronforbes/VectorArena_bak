@@ -139,6 +139,7 @@
     <Compile Include="GameStateManager.cs" />
     <Compile Include="Graphics\Bloom.cs" />
     <Compile Include="Graphics\Postprocess.cs" />
+    <Compile Include="KeyMapping.cs" />
     <Compile Include="Scene\Actor.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
