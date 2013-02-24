@@ -44,7 +44,11 @@ namespace VectorArenaWin8
             AddActor(starfield);
             AddActor(grid);
 
-            hubConnection = new HubConnection("http://localhost:2697");
+#if DEBUG
+            hubConnection = new HubConnection("http://localhost:29058");
+#else
+            hubConnection = new HubConnection("http://vectorarena.cloudapp.net");
+#endif
             hubProxy = hubConnection.CreateHubProxy("gameHub");
             hubProxy.On("Sync", data => Sync(data));
             hubConnection.Start().ContinueWith(startTask =>

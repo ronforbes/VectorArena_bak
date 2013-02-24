@@ -12,10 +12,6 @@ namespace VectorArenaWin8
     /// </summary>
     sealed partial class App : Application
     {
-        public readonly IHubProxy HubProxy;
-
-        readonly HubConnection connection;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -24,12 +20,6 @@ namespace VectorArenaWin8
         {
             InitializeComponent();
             Suspending += OnSuspending;
-
-            // Create the hub connection
-            connection = new HubConnection("http://localhost:2697");
-
-            // Create the hub proxy
-            HubProxy = connection.CreateHubProxy("server");
         }
 
         /// <summary>

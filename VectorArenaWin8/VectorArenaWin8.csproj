@@ -101,8 +101,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Reference Include="Microsoft.AspNet.SignalR.Client">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.1.0.0-rc2\lib\winrt\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.1.0.0\lib\winrt\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\Windows8\MonoGame.Framework.dll</HintPath>
@@ -133,19 +134,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gameplay\Grid.cs" />
-    <Compile Include="Gameplay\ShipManager.cs" />
-    <Compile Include="GameState.cs" />
-    <Compile Include="GameStateManager.cs" />
+    <Compile Include="Background\Grid.cs" />
+    <Compile Include="Ship\ShipManager.cs" />
+    <Compile Include="Game\GameState.cs" />
+    <Compile Include="Game\GameStateManager.cs" />
     <Compile Include="Graphics\Bloom.cs" />
     <Compile Include="Graphics\Postprocess.cs" />
-    <Compile Include="KeyMapping.cs" />
     <Compile Include="Scene\Actor.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gameplay\Bullet.cs" />
-    <Compile Include="Gameplay\BulletManager.cs" />
+    <Compile Include="Bullet\Bullet.cs" />
+    <Compile Include="Bullet\BulletManager.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
@@ -154,9 +154,9 @@
     <Compile Include="Graphics\LineBatch.cs" />
     <Compile Include="Graphics\PointBatch.cs" />
     <Compile Include="Scene\Scene.cs" />
-    <Compile Include="Gameplay\Ship.cs" />
-    <Compile Include="Gameplay\Starfield.cs" />
-    <Compile Include="VectorArenaGame.cs" />
+    <Compile Include="Ship\Ship.cs" />
+    <Compile Include="Background\Starfield.cs" />
+    <Compile Include="Game\VectorArenaGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
