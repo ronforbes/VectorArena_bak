@@ -29,9 +29,8 @@ namespace VectorArenaWebRole
 
         readonly static Lazy<Game> instance = new Lazy<Game>(() => new Game());
 
-        
         ShipManager shipManager;
-        //BulletManager bulletManager;
+        BulletManager bulletManager;
         GameStateManager gameStateManager;
         Random random = new Random();
         Timer updateTimer;
@@ -43,7 +42,7 @@ namespace VectorArenaWebRole
         {
             PlayerManager = new PlayerManager();
             shipManager = new ShipManager();
-            //bulletManager = new BulletManager();
+            bulletManager = new BulletManager();
             gameStateManager = new GameStateManager();
 
             updateTimer = new Timer(1000 / updatesPerSecond);
@@ -59,7 +58,7 @@ namespace VectorArenaWebRole
 
         public int AddPlayer(string connectionId)
         {
-            Ship ship = new Ship(new Vector2(random.Next(worldWidth) - worldWidth / 2, random.Next(worldHeight) - worldHeight / 2));
+            Ship ship = new Ship(new Vector2(random.Next(worldWidth) - worldWidth / 2, random.Next(worldHeight) - worldHeight / 2), bulletManager);
             Player player = new Player(connectionId, ship);
 
             PlayerManager.Add(player);
@@ -74,7 +73,7 @@ namespace VectorArenaWebRole
             previousUpdateTime = e.SignalTime;
 
             shipManager.Update(elapsedTime);
-            //bulletManager.Update(elapsedTime);
+            bulletManager.Update(elapsedTime);
         }
 
         void drawTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -82,7 +81,7 @@ namespace VectorArenaWebRole
             TimeSpan elapsedTime = e.SignalTime - previousDrawTime;
             previousDrawTime = e.SignalTime;
 
-            ConcurrentDictionary<string, object[]> gameStates = gameStateManager.GameStates(PlayerManager.Players, shipManager.Ships);
+            ConcurrentDictionary<string, object[]> gameStates = gameStateManager.GameStates(PlayerManager.Players, shipManager.Ships, bulletManager.Bullets);
 
             foreach (string connectionId in gameStates.Keys)
             {

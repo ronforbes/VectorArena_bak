@@ -56,17 +56,6 @@ namespace VectorArenaWin8
             vertices.Add(new Vector3(-15.0f, 15.0f, 0.0f));
         }
 
-        public void Fire()
-        {
-            if (fireTimer >= fireDelay)
-            {
-                GameplayScene scene = Scene as GameplayScene;
-                Vector2 velocity = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
-                //scene.BulletManager.SpawnBullet(new Vector2(Position.X + velocity.X * Radius * 2, Position.Y + velocity.Y * Radius * 2), velocity);
-                fireTimer = 0.0f;
-            }
-        }
-
         public override void Update(GameTime gameTime)
         {
             // Update the ship's velocity based on acceleration

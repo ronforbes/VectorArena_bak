@@ -9,7 +9,7 @@ namespace VectorArenaWebRole
 {
     public class GameStateManager
     {
-        public ConcurrentDictionary<string, object[]> GameStates(ConcurrentDictionary<string, Player> players, ConcurrentDictionary<string, Ship> ships)
+        public ConcurrentDictionary<string, object[]> GameStates(ConcurrentDictionary<string, Player> players, ConcurrentDictionary<string, Ship> ships, List<Bullet> bullets)
         {
             ConcurrentDictionary<string, object[]> gameStates = new ConcurrentDictionary<string, object[]>();
 
@@ -21,6 +21,15 @@ namespace VectorArenaWebRole
                 {
                     gameState.Ships.Add(Compress(ship.Value));
                 });
+
+                lock (bullets)
+                {
+                    foreach (Bullet bullet in bullets)
+                    {
+                        object[] compressedBullet = Compress(bullet);
+                        gameState.Bullets.Add(compressedBullet);
+                    }
+                }
 
                 gameStates.TryAdd(player.Key, Compress(gameState));
             });
@@ -44,11 +53,25 @@ namespace VectorArenaWebRole
             return compressedShip;
         }
 
+        private object[] Compress(Bullet bullet)
+        {
+            object[] compressedBullet = new object[5];
+
+            compressedBullet[0] = bullet.Id;
+            compressedBullet[1] = bullet.Position.X;
+            compressedBullet[2] = bullet.Position.Y;
+            compressedBullet[3] = bullet.Velocity.X;
+            compressedBullet[4] = bullet.Velocity.Y;
+
+            return compressedBullet;
+        }
+
         private object[] Compress(GameState gameState)
         {
-            object[] compressedGameState = new object[1];
+            object[] compressedGameState = new object[2];
 
             compressedGameState[0] = gameState.Ships;
+            compressedGameState[1] = gameState.Bullets;
 
             return compressedGameState;
         }

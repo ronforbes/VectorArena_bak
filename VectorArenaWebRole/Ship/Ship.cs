@@ -14,6 +14,7 @@ namespace VectorArenaWebRole
         public Vector2 Velocity;
         public Vector2 Acceleration;
         public float Rotation;
+        public float Radius;
         public ConcurrentDictionary<Action, bool> Actions;
         public Player Player;
 
@@ -38,14 +39,16 @@ namespace VectorArenaWebRole
         static int idCounter = 0;        
 
         float fireTimer = 0.0f;
+        BulletManager bulletManager;
 
-        public Ship(Vector2 position)
+        public Ship(Vector2 position, BulletManager bulletManager)
         {
             Id = Interlocked.Increment(ref idCounter);
             Position = position;
             Velocity = Vector2.Zero;
             Acceleration = Vector2.Zero;
             Rotation = 0.0f;
+            Radius = 15.0f;
             
             Actions = new ConcurrentDictionary<Action, bool>();
             Actions.TryAdd(Action.TurnLeft, false);
@@ -53,6 +56,8 @@ namespace VectorArenaWebRole
             Actions.TryAdd(Action.ThrustForward, false);
             Actions.TryAdd(Action.ThrustBackward, false);
             Actions.TryAdd(Action.Fire, false);
+
+            this.bulletManager = bulletManager;
         }
 
         public void Update(TimeSpan elapsedTime)
@@ -97,7 +102,12 @@ namespace VectorArenaWebRole
             // Fire based on the action being performed
             if (Actions[Action.Fire])
             {
-
+                if (fireTimer >= fireDelay)
+                {
+                    Vector2 velocity = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
+                    bulletManager.Add(new Bullet(new Vector2(Position.X + velocity.X * Radius * 2, Position.Y + velocity.Y * Radius * 2), velocity * Bullet.Speed, this));
+                    fireTimer = 0.0f;
+                }
             }
 
             if (fireTimer < fireDelay)

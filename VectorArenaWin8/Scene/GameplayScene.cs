@@ -67,6 +67,7 @@ namespace VectorArenaWin8
             GameState gameState = GameStateManager.Decompress(data);
 
             ShipManager.SyncShips(gameState.Ships);
+            BulletManager.SyncBullets(gameState.Bullets);
         }
 
         public override void Update(GameTime gameTime)

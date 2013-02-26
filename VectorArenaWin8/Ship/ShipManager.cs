@@ -97,14 +97,6 @@ namespace VectorArenaWin8.Gameplay
                     playerShip.Actions[keyMapping.Value] = false;
                 }
             }
-            
-            if (keyboardState.IsKeyDown(Keys.Space))
-            {
-                if (playerShip != null)
-                {
-                    playerShip.Fire();
-                }
-            }
 
             previousKeyboardState = keyboardState;
             base.Update(gameTime);

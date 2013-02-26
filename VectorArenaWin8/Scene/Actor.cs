@@ -33,12 +33,18 @@ namespace VectorArenaWin8
         {
             child.Parent = this;
             child.Scene = Scene;
-            Children.Add(child);
+            lock (Children)
+            {
+                Children.Add(child);
+            }
         }
 
         public void RemoveChild(Actor child)
         {
-            Children.Remove(child);
+            lock (Children)
+            {
+                Children.Remove(child);
+            }
         }
 
         public virtual void LoadContent()
@@ -61,8 +67,13 @@ namespace VectorArenaWin8
 
         public virtual void Draw(Camera camera)
         {
-            foreach(Actor actor in Children)
-                actor.Draw(camera);
+            lock (Children)
+            {
+                foreach (Actor actor in Children)
+                {
+                    actor.Draw(camera);
+                }
+            }
         }
     }
 }

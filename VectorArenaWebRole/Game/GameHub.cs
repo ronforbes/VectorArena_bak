@@ -33,7 +33,8 @@ namespace VectorArenaWebRole
 
         public void StartAction(string action)
         {
-            Ship ship = game.PlayerManager.Player(Context.ConnectionId).Ship;
+            Player player = game.PlayerManager.Player(Context.ConnectionId);
+            Ship ship = player.Ship;
             Ship.Action shipAction = (Ship.Action)Enum.Parse(typeof(Ship.Action), action);
             ship.Actions[shipAction] = true;
         }

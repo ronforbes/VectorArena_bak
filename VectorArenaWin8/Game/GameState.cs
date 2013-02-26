@@ -9,10 +9,12 @@ namespace VectorArenaWin8
     class GameState
     {
         public List<Ship> Ships;
+        public List<Bullet> Bullets;
 
         public GameState()
         {
             Ships = new List<Ship>();
+            Bullets = new List<Bullet>();
         }
     }
 }

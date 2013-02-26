@@ -17,18 +17,27 @@ namespace VectorArenaWin8
             bullets = new Dictionary<int, Bullet>();
         }
 
-        public void AddBullet(Bullet bullet)
+        public void AddBullet(int id)
         {
-            if (!bullets.ContainsKey(bullet.Id))
+            if (!bullets.ContainsKey(id))
             {
-                bullets.Add(bullet.Id, new Bullet(bullet));
-                AddChild(bullets[bullet.Id]);
+                bullets.Add(id, new Bullet(id));
+                AddChild(bullets[id]);
             }
         }
 
         public void SyncBullets(List<Bullet> bullets)
         {
+            foreach (Bullet bullet in bullets)
+            {
+                if (!this.bullets.ContainsKey(bullet.Id))
+                {
+                    AddBullet(bullet.Id);
+                }
 
+                this.bullets[bullet.Id].Position = bullet.Position;
+                this.bullets[bullet.Id].Velocity = bullet.Velocity;
+            }
         }
     }
 }
