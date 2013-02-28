@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VectorArenaWin8
 {
-    class BulletManager : Actor
+    class BulletManager : GameObject
     {
         Dictionary<int, Bullet> bullets;
 

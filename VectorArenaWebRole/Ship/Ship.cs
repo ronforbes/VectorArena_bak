@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Web;
+using VectorArenaWebRole;
 
 namespace VectorArenaWebRole
 {
-    public class Ship
+    public class Ship : GameObject
     {
-        public int Id;
-        public Vector2 Position;
-        public Vector2 Velocity;
-        public Vector2 Acceleration;
-        public float Rotation;
-        public float Radius;
+        public bool Alive;
+        public float Health;
         public ConcurrentDictionary<Action, bool> Actions;
         public Player Player;
 
@@ -31,17 +29,13 @@ namespace VectorArenaWebRole
         const float maxSpeed = 2000.0f;
         const float dragCoefficient = 0.95f;
         const float turnSpeed = 3.0f;
-        const float fireSpeed = 1.0f;
-        const float fireDelay = 5.0f;
-        const float lineWidth = 5.0f;
-        const float lightRadius = 50.0f;
-
+        const float maxHealth = 1000;
+        readonly TimeSpan fireDelay = TimeSpan.FromMilliseconds(80);
         static int idCounter = 0;        
-
-        float fireTimer = 0.0f;
+        DateTime lastBulletFiredAt;
         BulletManager bulletManager;
 
-        public Ship(Vector2 position, BulletManager bulletManager)
+        public Ship(Vector2 position, BulletManager bulletManager) : base()
         {
             Id = Interlocked.Increment(ref idCounter);
             Position = position;
@@ -57,10 +51,23 @@ namespace VectorArenaWebRole
             Actions.TryAdd(Action.ThrustBackward, false);
             Actions.TryAdd(Action.Fire, false);
 
+            lastBulletFiredAt = DateTime.Now;
+
             this.bulletManager = bulletManager;
         }
 
-        public void Update(TimeSpan elapsedTime)
+        public void Damage(int damage)
+        {
+            Health -= damage;
+
+            if (Health <= 0)
+            {
+                Health = 0;
+                Alive = false;
+            }
+        }
+
+        public override void Update(TimeSpan elapsedTime)
         {
             // Update the ship's velocity based on acceleration
             Velocity += Acceleration * elapsedTime.TotalSeconds;
@@ -102,16 +109,15 @@ namespace VectorArenaWebRole
             // Fire based on the action being performed
             if (Actions[Action.Fire])
             {
-                if (fireTimer >= fireDelay)
+                if (DateTime.Now - lastBulletFiredAt >= fireDelay)
                 {
                     Vector2 velocity = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
                     bulletManager.Add(new Bullet(new Vector2(Position.X + velocity.X * Radius * 2, Position.Y + velocity.Y * Radius * 2), velocity * Bullet.Speed, this));
-                    fireTimer = 0.0f;
+                    lastBulletFiredAt = DateTime.Now;
                 }
             }
 
-            if (fireTimer < fireDelay)
-                fireTimer += fireSpeed;
+            base.Update(elapsedTime);
         }
     }
 }

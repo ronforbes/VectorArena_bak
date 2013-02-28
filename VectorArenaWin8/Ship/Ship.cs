@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace VectorArenaWin8
 {
-    class Ship : Actor
+    class Ship : GameObject
     {
-        public int Id;
+        public bool Alive;
+        public float Health;
         public Dictionary<Action, bool> Actions;
 
         public enum Action
@@ -26,12 +27,9 @@ namespace VectorArenaWin8
         const float maxSpeed = 2000.0f;
         const float dragCoefficient = 0.95f;
         const float turnSpeed = 3.0f;
-        const float fireSpeed = 1.0f;
-        const float fireDelay = 5.0f;
         const float lineWidth = 5.0f;
         const float lightRadius = 50.0f;
 
-        float fireTimer = 0.0f;
         List<Vector3> vertices;
         Color color = Color.White;
         Color lightColor = new Color(0.25f, 0.25f, 0.25f, 1.0f);
@@ -94,9 +92,6 @@ namespace VectorArenaWin8
             {
                 Acceleration -= new Vector3((float)Math.Cos(Rotation), (float)Math.Sin(Rotation), 0.0f) * thrustAcceleration;
             }
-
-            if(fireTimer < fireDelay)
-                fireTimer += fireSpeed;
         }
 
         public override void Draw(Camera camera)

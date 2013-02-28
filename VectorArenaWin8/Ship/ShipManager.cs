@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VectorArenaWin8.Gameplay
 {
-    class ShipManager : Actor
+    class ShipManager : GameObject
     {
         public Ship PlayerShip
         {

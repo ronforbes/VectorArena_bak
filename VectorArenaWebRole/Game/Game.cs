@@ -26,11 +26,10 @@ namespace VectorArenaWebRole
         const int worldHeight = 10000;
         const double updatesPerSecond = 60;
         const double drawsPerSecond = 15;
-
         readonly static Lazy<Game> instance = new Lazy<Game>(() => new Game());
-
         ShipManager shipManager;
         BulletManager bulletManager;
+        CollisionManager collisionManager;
         GameStateManager gameStateManager;
         Random random = new Random();
         Timer updateTimer;
@@ -43,6 +42,7 @@ namespace VectorArenaWebRole
             PlayerManager = new PlayerManager();
             shipManager = new ShipManager();
             bulletManager = new BulletManager();
+            collisionManager = new CollisionManager();
             gameStateManager = new GameStateManager();
 
             updateTimer = new Timer(1000 / updatesPerSecond);
@@ -63,6 +63,7 @@ namespace VectorArenaWebRole
 
             PlayerManager.Add(player);
             shipManager.Add(ship);
+            collisionManager.Add(ship);
 
             return ship.Id;
         }
@@ -74,6 +75,7 @@ namespace VectorArenaWebRole
 
             shipManager.Update(elapsedTime);
             bulletManager.Update(elapsedTime);
+            collisionManager.Update();
         }
 
         void drawTimer_Elapsed(object sender, ElapsedEventArgs e)

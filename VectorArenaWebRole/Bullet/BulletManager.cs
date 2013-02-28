@@ -24,9 +24,14 @@ namespace VectorArenaWebRole
 
         public void Update(TimeSpan elapsedTime)
         {
-            foreach (Bullet bullet in Bullets)
+            lock (Bullets)
             {
-                bullet.Update(elapsedTime);
+                foreach(Bullet bullet in Bullets)
+                {
+                    bullet.Update(elapsedTime);
+                }
+
+                Bullets.RemoveAll(b => b.Disposed);
             }
         }
     }

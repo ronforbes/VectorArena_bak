@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace VectorArenaWin8
 {
-    class Bullet : Actor
+    class Bullet : GameObject
     {
-        public int Id;
-
         const float lifeSpan = 100.0f;
         const float decay = 1.0f;
         const float radius = 10.0f;
 
-        float life;
         Color color = Color.White;
 
         public Bullet(int id) : base()

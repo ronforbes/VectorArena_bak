@@ -61,6 +61,8 @@ namespace VectorArenaWin8
                 ship.Acceleration.X = (float)token[5];
                 ship.Acceleration.Y = (float)token[6];
                 ship.Rotation = (float)token[7];
+                ship.Alive = (bool)token[8];
+                ship.Health = (float)token[9];
             }
                 
             return ship;

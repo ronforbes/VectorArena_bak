@@ -13,7 +13,7 @@ namespace VectorArenaWin8
         public Vector3 Target = Vector3.Zero;
         public Vector3 Up = Vector3.Up;
         public Rectangle ScreenDimensions;
-        public Actor TargetActor;
+        public GameObject TargetObject;
         public Matrix World = Matrix.Identity;
 
         public Matrix View
@@ -33,10 +33,10 @@ namespace VectorArenaWin8
 
         public void Update(GameTime gameTime)
         {
-            if (TargetActor != null)
+            if (TargetObject != null)
             {
-                Position = new Vector3(TargetActor.Position.X, TargetActor.Position.Y, Position.Z);
-                Target = TargetActor.Position;
+                Position = new Vector3(TargetObject.Position.X, TargetObject.Position.Y, Position.Z);
+                Target = TargetObject.Position;
             }
         }
     }

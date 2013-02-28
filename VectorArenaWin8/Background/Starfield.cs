@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VectorArenaWin8
 {
-    class Starfield : Actor
+    class Starfield : GameObject
     {
         Random random;
         Vector3[] points;

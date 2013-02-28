@@ -16,7 +16,7 @@ namespace VectorArenaWin8
         public SpriteBatch SpriteBatch;
         public Camera Camera;
 
-        List<Actor> actors;
+        List<GameObject> gameObjects;
         Bloom bloom;
         GraphicsDevice graphicsDevice;
         RenderTarget2D renderTarget;
@@ -26,20 +26,20 @@ namespace VectorArenaWin8
         {
             this.graphicsDevice = graphicsDevice;
             Camera = new Camera(new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
-            actors = new List<Actor>();            
+            gameObjects = new List<GameObject>();            
             PresentationParameters parameters = graphicsDevice.PresentationParameters;
             renderTarget = new RenderTarget2D(graphicsDevice, parameters.BackBufferWidth, parameters.BackBufferHeight, false, parameters.BackBufferFormat, parameters.DepthStencilFormat, parameters.MultiSampleCount, RenderTargetUsage.DiscardContents);
         }
 
-        public void AddActor(Actor actor)
+        public void AddActor(GameObject gameObject)
         {
-            actor.Scene = this;
-            actors.Add(actor);
+            gameObject.Scene = this;
+            gameObjects.Add(gameObject);
         }
 
-        public void RemoveActor(Actor actor)
+        public void RemoveActor(GameObject gameObject)
         {
-            actors.Remove(actor);
+            gameObjects.Remove(gameObject);
         }
 
         public void LoadContent()
@@ -49,14 +49,14 @@ namespace VectorArenaWin8
             SpriteBatch = new SpriteBatch(graphicsDevice);
             bloom = new Bloom(graphicsDevice, SpriteBatch);
 
-            foreach (Actor actor in actors)
-                actor.LoadContent();
+            foreach (GameObject gameObject in gameObjects)
+                gameObject.LoadContent();
         }
 
         public virtual void Update(GameTime gameTime)
         {
-            foreach (Actor actor in actors)
-                actor.Update(gameTime);
+            foreach (GameObject gameObject in gameObjects)
+                gameObject.Update(gameTime);
 
             Camera.Update(gameTime);
         }
@@ -66,8 +66,8 @@ namespace VectorArenaWin8
             graphicsDevice.SetRenderTarget(renderTarget);
             graphicsDevice.Clear(ClearOptions.Target, clearColor, 0, 0);
 
-            foreach (Actor actor in actors)
-                actor.Draw(Camera);
+            foreach (GameObject gameObject in gameObjects)
+                gameObject.Draw(Camera);
 
             bloom.Begin(renderTarget);
 

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace VectorArenaWin8
 {
     // An object in the game that can be updated and drawn
-    class Actor
+    class GameObject
     {
-        public bool Alive;
+        public int Id;
         public Vector3 Position;
         public Vector3 Velocity;
         public Vector3 Acceleration;
@@ -21,15 +21,15 @@ namespace VectorArenaWin8
         public PointBatch PointBatch;
         public SpriteBatch SpriteBatch;
         public Scene Scene;
-        public Actor Parent;
-        public List<Actor> Children;
+        public GameObject Parent;
+        public List<GameObject> Children;
 
-        public Actor()
+        public GameObject()
         {
-            Children = new List<Actor>();
+            Children = new List<GameObject>();
         }
 
-        public void AddChild(Actor child)
+        public void AddChild(GameObject child)
         {
             child.Parent = this;
             child.Scene = Scene;
@@ -39,7 +39,7 @@ namespace VectorArenaWin8
             }
         }
 
-        public void RemoveChild(Actor child)
+        public void RemoveChild(GameObject child)
         {
             lock (Children)
             {
@@ -53,25 +53,25 @@ namespace VectorArenaWin8
             PointBatch = Scene.PointBatch;
             SpriteBatch = Scene.SpriteBatch;
 
-            foreach(Actor actor in Children)
+            foreach(GameObject gameObject in Children)
             {
-                actor.LoadContent();
+                gameObject.LoadContent();
             }
         }
 
         public virtual void Update(GameTime gameTime)
         {
-            foreach(Actor actor in Children)
-                actor.Update(gameTime);
+            foreach(GameObject gameObject in Children)
+                gameObject.Update(gameTime);
         }
 
         public virtual void Draw(Camera camera)
         {
             lock (Children)
             {
-                foreach (Actor actor in Children)
+                foreach (GameObject gameObject in Children)
                 {
-                    actor.Draw(camera);
+                    gameObject.Draw(camera);
                 }
             }
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VectorArenaWin8.Gameplay
 {
-    class Grid : Actor
+    class Grid : GameObject
     {
         const int primaryLineInterval = 200;
         const int primaryLineWidth = 10;

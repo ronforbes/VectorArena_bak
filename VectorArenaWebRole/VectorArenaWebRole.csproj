@@ -173,6 +173,7 @@
   <ItemGroup>
     <Compile Include="Bullet\Bullet.cs" />
     <Compile Include="Bullet\BulletManager.cs" />
+    <Compile Include="CollisionManager.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -182,6 +183,7 @@
     </Compile>
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\GameHub.cs" />
+    <Compile Include="Game\GameObject.cs" />
     <Compile Include="Game\GameState.cs" />
     <Compile Include="Game\GameStateManager.cs" />
     <Compile Include="Global.asax.cs">

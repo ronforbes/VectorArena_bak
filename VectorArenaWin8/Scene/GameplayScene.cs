@@ -56,7 +56,7 @@ namespace VectorArenaWin8
                 hubProxy.Invoke<int>("AddPlayer").ContinueWith(invokeTask =>
                 {
                     ShipManager.InitializePlayerShip(invokeTask.Result, hubProxy);
-                    Camera.TargetActor = ShipManager.PlayerShip;
+                    Camera.TargetObject = ShipManager.PlayerShip;
                     Camera.Position = new Vector3(ShipManager.PlayerShip.Position.X, ShipManager.PlayerShip.Position.Y, 500.0f);
                 });
             });

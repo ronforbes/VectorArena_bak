@@ -39,7 +39,7 @@ namespace VectorArenaWebRole
 
         private object[] Compress(Ship ship)
         {
-            object[] compressedShip = new object[8];
+            object[] compressedShip = new object[10];
 
             compressedShip[0] = ship.Id;
             compressedShip[1] = ship.Position.X;
@@ -49,6 +49,8 @@ namespace VectorArenaWebRole
             compressedShip[5] = ship.Acceleration.X;
             compressedShip[6] = ship.Acceleration.Y;
             compressedShip[7] = ship.Rotation;
+            compressedShip[8] = ship.Alive;
+            compressedShip[9] = ship.Health;
 
             return compressedShip;
         }
