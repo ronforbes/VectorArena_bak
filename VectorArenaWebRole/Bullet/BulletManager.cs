@@ -9,9 +9,12 @@ namespace VectorArenaWebRole
     {
         public List<Bullet> Bullets;
 
-        public BulletManager()
+        CollisionManager collisionManager;
+
+        public BulletManager(CollisionManager collisionManager)
         {
             Bullets = new List<Bullet>();
+            this.collisionManager = collisionManager;
         }
 
         public void Add(Bullet bullet)
@@ -19,6 +22,7 @@ namespace VectorArenaWebRole
             lock (Bullets)
             {
                 Bullets.Add(bullet);
+                collisionManager.Add(bullet);
             }
         }
 

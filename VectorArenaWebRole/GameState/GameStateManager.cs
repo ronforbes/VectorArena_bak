@@ -42,13 +42,13 @@ namespace VectorArenaWebRole
             object[] compressedShip = new object[10];
 
             compressedShip[0] = ship.Id;
-            compressedShip[1] = ship.Position.X;
-            compressedShip[2] = ship.Position.Y;
-            compressedShip[3] = ship.Velocity.X;
-            compressedShip[4] = ship.Velocity.Y;
-            compressedShip[5] = ship.Acceleration.X;
-            compressedShip[6] = ship.Acceleration.Y;
-            compressedShip[7] = ship.Rotation;
+            compressedShip[1] = ship.Movement.Position.X;
+            compressedShip[2] = ship.Movement.Position.Y;
+            compressedShip[3] = ship.Movement.Velocity.X;
+            compressedShip[4] = ship.Movement.Velocity.Y;
+            compressedShip[5] = ship.Movement.Acceleration.X;
+            compressedShip[6] = ship.Movement.Acceleration.Y;
+            compressedShip[7] = ship.Movement.Rotation;
             compressedShip[8] = ship.Alive;
             compressedShip[9] = ship.Health;
 
@@ -60,10 +60,10 @@ namespace VectorArenaWebRole
             object[] compressedBullet = new object[5];
 
             compressedBullet[0] = bullet.Id;
-            compressedBullet[1] = bullet.Position.X;
-            compressedBullet[2] = bullet.Position.Y;
-            compressedBullet[3] = bullet.Velocity.X;
-            compressedBullet[4] = bullet.Velocity.Y;
+            compressedBullet[1] = bullet.Movement.Position.X;
+            compressedBullet[2] = bullet.Movement.Position.Y;
+            compressedBullet[3] = bullet.Movement.Velocity.X;
+            compressedBullet[4] = bullet.Movement.Velocity.Y;
 
             return compressedBullet;
         }

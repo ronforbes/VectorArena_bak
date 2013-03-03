@@ -7,8 +7,8 @@ namespace VectorArenaWebRole
 {
     public class Vector2
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
         public Vector2()
         {
@@ -16,7 +16,7 @@ namespace VectorArenaWebRole
             Y = 0;
         }
 
-        public Vector2(double x, double y)
+        public Vector2(float x, float y)
         {
             X = x;
             Y = y;
@@ -27,14 +27,14 @@ namespace VectorArenaWebRole
             get { return new Vector2(); }
         }
 
-        public double Length()
+        public float Length()
         {
-            return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
+            return (float)Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2));
         }
 
         public Vector2 Normalize()
         {
-            double length = Length();
+            float length = Length();
             return new Vector2(X / length, Y / length);
         }
 
@@ -48,7 +48,7 @@ namespace VectorArenaWebRole
             return new Vector2(v1.X - v2.X, v1.Y - v2.Y);
         }
 
-        public static Vector2 operator *(Vector2 vector, double scalar)
+        public static Vector2 operator *(Vector2 vector, float scalar)
         {
             return new Vector2(vector.X * scalar, vector.Y * scalar);
         }

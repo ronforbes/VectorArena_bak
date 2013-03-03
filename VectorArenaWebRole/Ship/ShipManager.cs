@@ -11,14 +11,21 @@ namespace VectorArenaWebRole
     {
         public ConcurrentDictionary<string, Ship> Ships;
 
-        public ShipManager()
+        ConcurrentDictionary<Ship, DateTime> shipsToRespawn;
+        CollisionManager collisionManager;
+
+        public ShipManager(CollisionManager collisionManager)
         {
             Ships = new ConcurrentDictionary<string, Ship>();
+            this.collisionManager = collisionManager;
         }
 
         public void Add(Ship ship)
         {
-            Ships.TryAdd(ship.Player.ConnectionId, ship);
+            if (Ships.TryAdd(ship.Player.ConnectionId, ship))
+            {
+                collisionManager.Add(ship);
+            }
         }
 
         public void Update(TimeSpan elapsedTime)

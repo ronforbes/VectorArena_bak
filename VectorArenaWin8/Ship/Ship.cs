@@ -30,9 +30,9 @@ namespace VectorArenaWin8
         const float lineWidth = 5.0f;
         const float lightRadius = 50.0f;
 
-        List<Vector3> vertices;
-        Color color = Color.White;
-        Color lightColor = new Color(0.25f, 0.25f, 0.25f, 1.0f);
+        readonly List<Vector3> vertices;
+        readonly Color color = Color.White;
+        readonly Color lightColor = new Color(0.25f, 0.25f, 0.25f, 1.0f);
 
         public Ship(int id) : base()
         {
@@ -65,7 +65,7 @@ namespace VectorArenaWin8
                 Velocity.Normalize();
                 Velocity *= maxSpeed;
             }
-
+            
             // Apply drag to velocity
             Velocity *= dragCoefficient;
 
@@ -96,29 +96,32 @@ namespace VectorArenaWin8
 
         public override void Draw(Camera camera)
         {
-            // Draw the ship
-            Matrix rotation = Matrix.CreateRotationZ(Rotation);
-            Matrix translation = Matrix.CreateTranslation(Position);
-
-            if (LineBatch == null || PointBatch == null)
+            if (Alive)
             {
-                LineBatch = Scene.LineBatch;
-                PointBatch = Scene.PointBatch;
-            }
-            else
-            {
-                LineBatch.Begin(rotation * translation, camera);
+                // Draw the ship
+                Matrix rotation = Matrix.CreateRotationZ(Rotation);
+                Matrix translation = Matrix.CreateTranslation(Position);
 
-                for (int v = 0; v < vertices.Count; v++)
+                if (LineBatch == null || PointBatch == null)
                 {
-                    LineBatch.Draw(vertices[v], vertices[(v + 1) % vertices.Count], lineWidth, color);
+                    LineBatch = Scene.LineBatch;
+                    PointBatch = Scene.PointBatch;
                 }
+                else
+                {
+                    LineBatch.Begin(rotation * translation, camera);
 
-                LineBatch.End();
+                    for (int v = 0; v < vertices.Count; v++)
+                    {
+                        LineBatch.Draw(vertices[v], vertices[(v + 1) % vertices.Count], lineWidth, color);
+                    }
 
-                PointBatch.Begin(translation, camera);
-                PointBatch.Draw(Vector3.Zero, lightRadius, lightColor);
-                PointBatch.End();
+                    LineBatch.End();
+
+                    PointBatch.Begin(translation, camera);
+                    PointBatch.Draw(Vector3.Zero, lightRadius, lightColor);
+                    PointBatch.End();
+                }
             }
         }
     }

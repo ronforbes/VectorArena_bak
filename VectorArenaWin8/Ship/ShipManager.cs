@@ -75,6 +75,8 @@ namespace VectorArenaWin8.Gameplay
                 this.ships[ship.Id].Velocity = ship.Velocity;
                 this.ships[ship.Id].Acceleration = ship.Acceleration;
                 this.ships[ship.Id].Rotation = ship.Rotation;
+                this.ships[ship.Id].Alive = ship.Alive;
+                this.ships[ship.Id].Health = ship.Health;
             }
         }
 

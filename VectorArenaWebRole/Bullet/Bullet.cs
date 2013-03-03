@@ -20,8 +20,7 @@ namespace VectorArenaWebRole
         public Bullet(Vector2 position, Vector2 velocity, Ship ship) : base()
         {
             Id = Interlocked.Increment(ref idCounter);
-            Position = position;
-            Velocity = velocity;
+            Movement = new BulletMovement(position, velocity);
             Radius = 10.0f;
             Ship = ship;
 
@@ -37,7 +36,11 @@ namespace VectorArenaWebRole
         {
             if (gameObject is Ship)
             {
-                (gameObject as Ship).Damage(100);
+                // Ignore collision with the bullet's own ship
+                if (gameObject != Ship)
+                {
+                    (gameObject as Ship).Damage(100);
+                }
             }
 
             if (gameObject is Bullet)
@@ -50,7 +53,7 @@ namespace VectorArenaWebRole
         
         public override void Update(TimeSpan elapsedTime)
         {
-            Position += Velocity * elapsedTime.TotalSeconds;
+            Movement.Update(elapsedTime);
 
             // Dispose of the bullet after its life span has expired
             if (DateTime.Now - createdAt >= LifeSpan)

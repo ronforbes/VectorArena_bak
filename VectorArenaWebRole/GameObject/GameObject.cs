@@ -9,10 +9,8 @@ namespace VectorArenaWebRole
     public class GameObject
     {
         public int Id;
-        public Vector2 Position;
-        public Vector2 Velocity;
-        public Vector2 Acceleration;
-        public float Rotation;
+        public GameObjectMovement Movement;
+        
         public float Radius;
         public Rectangle Bounds;
         public bool Disposed;
@@ -34,8 +32,8 @@ namespace VectorArenaWebRole
 
         public virtual void Update(TimeSpan elapsedTime)
         {
-            Bounds.X = (int)Position.X;
-            Bounds.Y = (int)Position.Y;
+            Bounds.X = (int)Movement.Position.X;
+            Bounds.Y = (int)Movement.Position.Y;
             Bounds.Width = 2 * (int)Radius;
             Bounds.Height = 2 * (int)Radius;
         }

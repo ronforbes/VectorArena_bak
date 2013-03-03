@@ -40,9 +40,10 @@ namespace VectorArenaWebRole
         public Game()
         {
             PlayerManager = new PlayerManager();
-            shipManager = new ShipManager();
-            bulletManager = new BulletManager();
             collisionManager = new CollisionManager();
+            shipManager = new ShipManager(collisionManager);
+            bulletManager = new BulletManager(collisionManager);
+            
             gameStateManager = new GameStateManager();
 
             updateTimer = new Timer(1000 / updatesPerSecond);
@@ -63,7 +64,6 @@ namespace VectorArenaWebRole
 
             PlayerManager.Add(player);
             shipManager.Add(ship);
-            collisionManager.Add(ship);
 
             return ship.Id;
         }
